@@ -9,19 +9,11 @@ void main() async {
   runApp(MyApp());
 }
 
-final dummySnapshot = [
-  {"name": "Filip", "votes": 15},
-  {"name": "Abraham", "votes": 14},
-  {"name": "Richard", "votes": 11},
-  {"name": "Ike", "votes": 10},
-  {"name": "Justin", "votes": 1},
-];
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Baby Names',
+      title: 'L2T',
       home: MyHomePage(),
     );
   }
