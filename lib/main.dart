@@ -3,18 +3,49 @@ import 'package:flutter/material.dart';
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
 
+import 'package:connectycube_sdk/connectycube_sdk.dart';
+
+import 'src//utils/configs.dart' as config;
+import 'src/screens/login_screen.dart';
+import 'package:flutter/services.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]).then((_) {
+    runApp(new MyApp());
+  });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
       title: 'L2T',
-      home: MyHomePage(),
+      home: LoginScreen(),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    init(
+      config.APP_ID,
+      config.AUTH_KEY,
+      config.AUTH_SECRET,
     );
   }
 }
