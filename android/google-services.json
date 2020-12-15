@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "562940629317",
+    "project_id": "l2teach",
+    "storage_bucket": "l2teach.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:562940629317:android:8a9cf3558845c8d29bee2c",
+        "android_client_info": {
+          "package_name": "com.TCi.L2T"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "562940629317-mco8sli8lts52m52a98mnkfjc78urtl4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs2GWwxz01Iu_x7spjlfMfazbq0cSCm3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "562940629317-mco8sli8lts52m52a98mnkfjc78urtl4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "562940629317-s2aks3o3tb51m7e67v6th68d3312fei9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.TCi.L2T"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
