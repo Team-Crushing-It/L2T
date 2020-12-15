@@ -5,7 +5,7 @@ import 'package:connectycube_sdk/connectycube_sdk.dart';
 import './finish_screen.dart';
 
 Color c = const Color.fromRGBO(30, 35, 64, 1.0);
-List<String> wordsAvailable = ['a'];
+List<String> wordsAvailable = ['a, b, c', 'b'];
 var newIndex = 0;
 Color containerBackground = const Color.fromRGBO(30, 35, 64, 1.0);
 final databaseReference = FirebaseFirestore.instance;
@@ -161,6 +161,7 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   void initState() {
     super.initState();
     getFirebaseValues();
+
     _callSession.onLocalStreamReceived = _addLocalMediaStream;
     _callSession.onRemoteStreamReceived = _addRemoteMediaStream;
     _callSession.onSessionClosed = _onSessionClosed;
@@ -247,9 +248,7 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
 
         rows.add(
           Expanded(
-            child: orientation == Orientation.portrait
-                ? Row(children: chunk)
-                : Column(children: chunk),
+            child: Column(children: chunk),
           ),
         );
       }
@@ -272,15 +271,10 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
                       builder: (context, orientation) {
                         return Center(
                           child: Container(
-                            child: orientation == Orientation.portrait
-                                ? Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: renderStreamsGrid(orientation))
-                                : Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: renderStreamsGrid(orientation)),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: renderStreamsGrid(orientation)),
                           ),
                         );
                       },
@@ -371,7 +365,7 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
 
   Widget _getActionsPanel() {
     return Container(
-      margin: EdgeInsets.only(bottom: 16, left: 8, right: 8),
+      margin: EdgeInsets.only(bottom: 16, left: 150, right: 8),
       child: ClipRRect(
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(32),
