@@ -4,30 +4,6 @@ import 'package:connectycube_sdk/connectycube_sdk.dart';
 
 import './finish_screen.dart';
 
-Color c = const Color.fromRGBO(30, 35, 64, 1.0);
-List<String> wordsAvailable = ['a, b, c', 'b'];
-var newIndex = 0;
-Color containerBackground = const Color.fromRGBO(30, 35, 64, 1.0);
-final databaseReference = FirebaseFirestore.instance;
-var hcurrent;
-final _listController = ScrollController();
-
-getFirebaseValues() {
-  print("stuffy things go ploosh");
-  // //Takes all of the names from the firebase and adds it into list
-  // databaseReference
-  //     .collection("col")
-  //     .getDocuments()
-  //     .then((QuerySnapshot snapshot) {
-  //   snapshot.documents.forEach((f) {
-  //     //print('${f.data}');
-  //     Map<String, dynamic> codedData = f.data;
-  //     wordsAvailable.add(codedData["value"]);
-  //     print("here ya go: " + codedData["value"]);
-  //   });
-  // });
-}
-
 class IncomingCallScreen extends StatelessWidget {
   static const String TAG = "IncomingCallScreen";
   final P2PSession _callSession;
@@ -41,8 +17,7 @@ class IncomingCallScreen extends StatelessWidget {
       log("_onSessionClosed", TAG);
       Navigator.pop(context);
     };
-    var h = MediaQuery.of(context).size.height;
-    hcurrent = h;
+
     return MaterialApp(
         home: WillPopScope(
             onWillPop: () => _onBackPressed(context),
@@ -160,7 +135,6 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   @override
   void initState() {
     super.initState();
-    getFirebaseValues();
 
     _callSession.onLocalStreamReceived = _addLocalMediaStream;
     _callSession.onRemoteStreamReceived = _addRemoteMediaStream;
@@ -309,59 +283,22 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
             alignment: Alignment.bottomCenter,
             child: _getActionsPanel(),
           ),
-          Opacity(
-              opacity: 0.4,
-              child: Material(
-                  child: Container(
-                      color: new Color.fromRGBO(255, 0, 0, 0.5),
-                      width: 140,
-                      height: MediaQuery.of(context).size.height,
-                      child: Align(
-                          alignment: Alignment.topRight,
-                          child: ListView.builder(
-                            controller: _listController,
-                            itemCount: wordsAvailable.length,
-                            itemBuilder: (context, i) {
-                              return ListTile(
-                                title: _buildChild(i),
-                                onTap: () {
-                                  //print(wordsAvailable[i]);
-                                  _animateToIndex(i);
-                                  print("I touched it");
-                                  newIndex =
-                                      wordsAvailable.indexOf(wordsAvailable[i]);
-                                  //changeVideo(wordsAvailable[i]);
-                                },
-                                //Calls widget to check if the word on the list is the one playing
-                              );
-                            },
-                          )))))
+          Material(
+            color: Colors.transparent,
+            child: Container(
+              // color: Colors.transparent,
+              width: 300,
+              height: MediaQuery.of(context).size.height,
+              child: _buildBody(context),
+            ),
+          )
         ],
       ),
     );
   }
 
-  _animateToIndex(i) => _listController.animateTo(((hcurrent / 13) - 0.5) * i,
-      duration: Duration(seconds: 2), curve: Curves.fastOutSlowIn);
-  Widget _buildChild(i) {
-    Paint paint = Paint();
-    Color backgroundText = const Color.fromRGBO(190, 190, 190, 0.9);
-    paint.color = backgroundText;
-    print("here it is: " + newIndex.toString());
-    //Change 2 to the current video index value once speech recognition is done
-    if (i == newIndex) {
-      return Text('${wordsAvailable[i]}',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            background: paint,
-          ));
-    }
-    return Text('${wordsAvailable[i]}',
-        style: TextStyle(
-            color: Colors
-                .white)); // Returns normal format if not the selected word
-  }
+  // _animateToIndex(i) => _listController.animateTo(((hcurrent / 13) - 0.5) * i,
+  //     duration: Duration(seconds: 2), curve: Curves.fastOutSlowIn);
 
   Widget _getActionsPanel() {
     return Container(
@@ -520,23 +457,95 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   void onDisconnectedFromUser(P2PSession session, int userId) {
     log("onDisconnectedFromUser userId= $userId");
   }
-}
 
-class SecondRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Route"),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
+  Widget _buildBody(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('baby').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return LinearProgressIndicator();
+
+        return _buildList(context, snapshot.data.docs);
+      },
+    );
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    return ListView(
+      padding: const EdgeInsets.only(top: 20.0),
+      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    //final record = Record.fromMap(data);
+    final record = Record.fromSnapshot(data);
+
+    return Padding(
+      key: ValueKey(record.name),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Container(
+        // decoration: BoxDecoration(
+        //   border: Border.all(color: Colors.grey),
+        //   borderRadius: BorderRadius.circular(5.0),
+        // ),
+        child: InkWell(
+          onTap: () => record.reference.update(
+            {'votes': record.votes + 1},
+          ),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          right: 8, top: 8, left: 8, bottom: 8),
+                      child: Text(
+                        record.votes.toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+                //===============================================================
+                Flexible(
+                  flex: 6,
+                  child: Text(
+                    record.name,
+                    maxLines: 3,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ),
+              ]),
         ),
       ),
     );
   }
+}
+
+class Record {
+  final String name;
+  final int votes;
+  final DocumentReference reference;
+
+  Record.fromMap(Map<String, dynamic> map(), {this.reference})
+      : assert(map()['name'] != null),
+        assert(map()['votes'] != null),
+        name = map()['name'],
+        votes = map()['votes'];
+
+  Record.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data, reference: snapshot.reference);
+
+  @override
+  String toString() => "Record<$name:$votes>";
 }
