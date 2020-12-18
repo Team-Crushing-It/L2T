@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
-
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import './finish_screen.dart';
 
 class IncomingCallScreen extends StatelessWidget {
@@ -128,6 +128,11 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   bool _isSpeakerEnabled = true;
   bool _isMicMute = false;
 
+  stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _text = 'Press the button and start speaking';
+  double _confidence = 1.0;
+
   Map<int, RTCVideoRenderer> streams = {};
 
   _ConversationCallScreenState(this._callSession, this._isIncoming);
@@ -135,7 +140,7 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   @override
   void initState() {
     super.initState();
-
+    _speech = stt.SpeechToText();
     _callSession.onLocalStreamReceived = _addLocalMediaStream;
     _callSession.onRemoteStreamReceived = _addRemoteMediaStream;
     _callSession.onSessionClosed = _onSessionClosed;
@@ -155,6 +160,30 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
       log("[dispose] dispose renderer for $opponentId", TAG);
       await stream.dispose();
     });
+  }
+
+  void _listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        print("the aliens are listening");
+        _speech.listen(
+          onResult: (val) => setState(() {
+            _text = val.recognizedWords;
+            if (val.hasConfidenceRating && val.confidence > 0) {
+              _confidence = val.confidence;
+            }
+          }),
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 
   void _addLocalMediaStream(MediaStream stream) {
@@ -286,11 +315,26 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
           Material(
             color: Colors.transparent,
             child: Container(
-              // color: Colors.transparent,
-              width: 300,
-              height: MediaQuery.of(context).size.height,
-              child: _buildBody(context),
-            ),
+                // color: Colors.transparent,
+                width: 300,
+                height: MediaQuery.of(context).size.height,
+                child: Stack(
+                  children: [
+                    _buildBody(context),
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Stack(
+                          children: [
+                            Text(_text),
+                            FlatButton(
+                              onPressed: _listen,
+                              child: Icon(
+                                  _isListening ? Icons.mic : Icons.mic_none),
+                            ),
+                          ],
+                        ))
+                  ],
+                )),
           )
         ],
       ),
