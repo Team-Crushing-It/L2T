@@ -128,6 +128,8 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   bool _isSpeakerEnabled = true;
   bool _isMicMute = false;
   var globalData = [];
+  var sentenceItMatchesWith = [];
+  var comparingString = "";
   stt.SpeechToText _speech;
   bool _isListening = false;
   String _text = 'Press the button and start speaking';
@@ -178,7 +180,6 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
             print(_text);
             print(globalData);
             var firebaseList = globalData.toSet().toList();
-            var sentenceItMatchesWith = [];
             var recognizedWords = _text.split(" ");
             for (var sentence in firebaseList) {
               var count = 0;
@@ -189,6 +190,8 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
               }
               if (count >= 2) {
                 sentenceItMatchesWith.add(sentence);
+                comparingString = sentenceItMatchesWith[0];
+                sentenceItMatchesWith = [];
               }
             }
             print(sentenceItMatchesWith);
@@ -577,7 +580,10 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
                       child: Text(
                         record.votes.toString(),
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                            fontWeight: FontWeight.bold,
+                            color: comparingString == record.name
+                                ? Colors.green
+                                : Colors.white),
                       ),
                     ),
                   ),
@@ -589,7 +595,10 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
                     record.name,
                     maxLines: 3,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
+                        fontWeight: FontWeight.bold,
+                        color: comparingString == record.name
+                            ? Colors.green
+                            : Colors.white),
                   ),
                 ),
               ]),
