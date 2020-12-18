@@ -127,7 +127,7 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   bool _isCameraEnabled = true;
   bool _isSpeakerEnabled = true;
   bool _isMicMute = false;
-
+  var globalData = [];
   stt.SpeechToText _speech;
   bool _isListening = false;
   String _text = 'Press the button and start speaking';
@@ -171,9 +171,27 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
       if (available) {
         setState(() => _isListening = true);
         print("the aliens are listening");
-        _speech.listen(
+        await _speech.listen(
           onResult: (val) => setState(() {
             _text = val.recognizedWords;
+            print("make that");
+            print(_text);
+            print(globalData);
+            var firebaseList = globalData.toSet().toList();
+            var sentenceItMatchesWith = [];
+            var recognizedWords = _text.split(" ");
+            for (var sentence in firebaseList) {
+              var count = 0;
+              for (var a in recognizedWords) {
+                if (a.length > 3 && sentence.contains(a)) {
+                  count += 1;
+                }
+              }
+              if (count >= 2) {
+                sentenceItMatchesWith.add(sentence);
+              }
+            }
+            print(sentenceItMatchesWith);
             if (val.hasConfidenceRating && val.confidence > 0) {
               _confidence = val.confidence;
             }
@@ -514,6 +532,11 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    var tempthingy = snapshot.toList();
+    for (var i = 0; i < tempthingy.length; i++) {
+      globalData.add(Record.fromSnapshot(tempthingy[i]).name);
+    }
+
     return ListView(
       padding: const EdgeInsets.only(top: 20.0),
       children: snapshot.map((data) => _buildListItem(context, data)).toList(),
