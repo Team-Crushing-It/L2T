@@ -130,6 +130,7 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   var globalData = [];
   var sentenceItMatchesWith = [];
   var comparingString = "";
+  var showvalue = false;
   stt.SpeechToText _speech;
   bool _isListening = false;
   String _text = 'Press the button and start speaking';
@@ -574,20 +575,12 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                   child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          right: 8, top: 8, left: 8, bottom: 8),
-                      child: Text(
-                        record.votes.toString(),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: comparingString == record.name
-                                ? Colors.green
-                                : Colors.white),
-                      ),
+                    child: Checkbox(
+                      value: comparingString == record.name,
                     ),
                   ),
                 ),
+
                 //===============================================================
                 Flexible(
                   flex: 6,
