@@ -1,4 +1,4 @@
-package com.example.L2T
+package com.TCi.L2T
 
 import io.flutter.embedding.android.FlutterActivity
 
