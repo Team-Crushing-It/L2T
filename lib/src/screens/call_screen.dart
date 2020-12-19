@@ -565,11 +565,13 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: 42,
-                height: 42,
                 child: Center(
-                  child: Checkbox(
-                    value: sentenceItMatchesWith.contains(record.name),
+                  child: Theme(
+                    data: ThemeData(unselectedWidgetColor: Colors.white24),
+                    child: Checkbox(
+                      onChanged: null,
+                      value: sentenceItMatchesWith.contains(record.name),
+                    ),
                   ),
                 ),
               ),
@@ -584,7 +586,7 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
                       fontWeight: FontWeight.bold,
                       color: comparingString == record.name
                           ? Colors.green
-                          : Colors.white),
+                          : Colors.white24),
                 ),
               ),
             ]),
