@@ -5,7 +5,7 @@ bool oneSelected = true;
 bool twoSelected = true;
 bool threeSelected = true;
 
-Widget infoSection = Container(     
+Widget infoSection = Container(
   height: 170,
   width: 390,
   child: Row(
@@ -18,12 +18,22 @@ Widget infoSection = Container(
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              
               children: [
-                Text('Curent Tokens'),
+                Text(
+                  'Current Tokens',
+                  style: new TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
                 Text(''),
                 Text('12'),
-                Text('-1'),
+                Text(
+                  '-1',
+                  style: new TextStyle(
+                    fontSize: 15.0,
+                    color: Colors.red,
+                  ),
+                ),
               ],
             ),
             EmojiSection2(),
