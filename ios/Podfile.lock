@@ -45,6 +45,10 @@ PODS:
   - package_info (0.0.1):
     - Flutter
   - PromisesObjC (1.2.11)
+  - speech_to_text (0.0.1):
+    - Flutter
+    - Try
+  - Try (2.1.1)
 
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -54,6 +58,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_webrtc (from `.symlinks/plugins/flutter_webrtc/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
+  - speech_to_text (from `.symlinks/plugins/speech_to_text/ios`)
 
 SPEC REPOS:
   trunk:
@@ -66,6 +71,7 @@ SPEC REPOS:
     - Libyuv
     - nanopb
     - PromisesObjC
+    - Try
 
 EXTERNAL SOURCES:
   cloud_firestore:
@@ -83,6 +89,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_webrtc/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
+  speech_to_text:
+    :path: ".symlinks/plugins/speech_to_text/ios"
 
 CHECKOUT OPTIONS:
   FirebaseFirestore:
@@ -106,6 +114,8 @@ SPEC CHECKSUMS:
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
+  speech_to_text: b43a7d99aef037bd758ed8e45d79bbac035d2dfe
+  Try: 5ef669ae832617b3cee58cb2c6f99fb767a4ff96
 
 PODFILE CHECKSUM: 5d77dabcf90e1634a9c933252de18e638733ea42
 
