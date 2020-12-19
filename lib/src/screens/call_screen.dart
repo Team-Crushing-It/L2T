@@ -143,6 +143,8 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _listen());
+
     _speech = stt.SpeechToText();
     _callSession.onLocalStreamReceived = _addLocalMediaStream;
     _callSession.onRemoteStreamReceived = _addRemoteMediaStream;
@@ -166,6 +168,7 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
   }
 
   void _listen() async {
+    print("running the thing");
     if (!_isListening) {
       bool available = await _speech.initialize(
         onStatus: (val) => print('onStatus: $val'),
@@ -346,7 +349,6 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
                         alignment: Alignment.bottomCenter,
                         child: Stack(
                           children: [
-                            Text(_text),
                             FlatButton(
                               onPressed: _listen,
                               child: Icon(
@@ -558,45 +560,34 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
         //   border: Border.all(color: Colors.grey),
         //   borderRadius: BorderRadius.circular(5.0),
         // ),
-        child: InkWell(
-          onTap: () => record.reference.update(
-            {'votes': record.votes + 1},
-          ),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 42,
-                  height: 42,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Center(
-                    child: Checkbox(
-                      width: 42,
-                      height: 42,
-                      value: sentenceItMatchesWith.contains(record.name),
-                    ),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                child: Center(
+                  child: Checkbox(
+                    value: sentenceItMatchesWith.contains(record.name),
                   ),
                 ),
+              ),
 
-                //==============s=================================================
-                Flexible(
-                  flex: 6,
-                  child: Text(
-                    record.name,
-                    maxLines: 3,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: comparingString == record.name
-                            ? Colors.green
-                            : Colors.white),
-                  ),
+              //==============s=================================================
+              Flexible(
+                flex: 6,
+                child: Text(
+                  record.name,
+                  maxLines: 3,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: comparingString == record.name
+                          ? Colors.green
+                          : Colors.white),
                 ),
-              ]),
-        ),
+              ),
+            ]),
       ),
     );
   }
