@@ -191,8 +191,7 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
               }
               if (count >= 2) {
                 sentenceItMatchesWith.add(sentence);
-                comparingString = sentenceItMatchesWith[0];
-                sentenceItMatchesWith = [];
+                comparingString = sentence;
               }
             }
             print(sentenceItMatchesWith);
@@ -576,12 +575,14 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
                   ),
                   child: Center(
                     child: Checkbox(
-                      value: comparingString == record.name,
+                      width: 42,
+                      height: 42,
+                      value: sentenceItMatchesWith.contains(record.name),
                     ),
                   ),
                 ),
 
-                //===============================================================
+                //==============s=================================================
                 Flexible(
                   flex: 6,
                   child: Text(
