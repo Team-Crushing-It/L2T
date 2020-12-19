@@ -575,8 +575,6 @@ class _ConversationCallScreenState extends State<ConversationCallScreen>
                   ),
                   child: Center(
                     child: Checkbox(
-                      width: 42,
-                      height: 42,
                       value: sentenceItMatchesWith.contains(record.name),
                     ),
                   ),
